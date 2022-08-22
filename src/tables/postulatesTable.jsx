@@ -1,6 +1,8 @@
 import DataTable from 'react-data-table-component';
 import React,{useState, useEffect} from 'react';
 import 'styled-components';
+//import { Modal } from '../Modal';
+
 
 
 const columns = [
@@ -27,7 +29,6 @@ const columns = [
     {name: 'Linkedin', selector: row => row['Linkedin']},
     {name: 'Ultimo Estado', selector: row => row['Ultimo Estado']},
 ]
-
 export const PostulateTable =()=>{
         
     const [users, setUsers] = useState([])
@@ -55,10 +56,32 @@ export const PostulateTable =()=>{
 		return () => clearTimeout(timeout);
 	}, []);
 
+    const [selectedRows, setSelectedRows] = React.useState([]);
+	const [toggleCleared, setToggleCleared] = React.useState(false);
+	const [data, setData] = React.useState(DataTable);
+
+	const handleRowSelected = React.useCallback(state => {
+		setSelectedRows(state.selectedRows);
+	}, []);
+
+	const contextActions = React.useMemo(() => {
+		const Modal = () => {
+            
+            return(
+                
+            )
+        }
+		return (
+			<button key="delete" onClick={Modal} style={{ backgroundColor: 'red' }} icon>
+				ABRIR MODAL
+			</button>
+		);
+	}, [data, selectedRows, toggleCleared]);
+
 
     return (
         <>
-        
+
         <DataTable
         title='Tabla postulados'
         columns={columns}
@@ -67,10 +90,12 @@ export const PostulateTable =()=>{
         FixedHeaderStory
         fixedHeader
         fixedHeaderScrollHeight="550px"
-		highlightOnHover
-		pointerOnHover
-        selectableRows
         progressPending={pending}
+        selectableRows
+        contextActions={contextActions}
+        onSelectedRowsChange={handleRowSelected}
+        clearSelectedRows={toggleCleared}
+        pagination
         />
         </>
     )
